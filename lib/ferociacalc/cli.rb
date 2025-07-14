@@ -44,27 +44,33 @@ module Ferociacalc
     end
 
     def accept_calculator
-      # Acquire the desired calculator
-
+      # Acquire the desired calculator and inputs
       accept(Ferociacalc::Calculators::Calculator) do |calc_name|
-        clazz = Object.const_get "Ferociacalc::Calculators::#{snake_to_camel(calc_name)}"
+        clazz = Object.const_get "Ferociacalc::Calculators::#{self.class.snake_to_class_case(calc_name)}"
         clazz.new
       rescue NameError
         raise "Unknown calculator '#{calc_name}'"
       end
+    end
 
-      on('-c CALCULATOR', Ferociacalc::Calculators::Calculator, 'CALCULATOR to use') do |calc|
-        @calculator = calc
+    def calculator_options # rubocop:disable Metrics/MethodLength
+      # Given calculators know their specific inputs, source CLI options from them instead of codifying here
+      on('-c CALCULATOR', '--calculator CALCULATOR', Ferociacalc::Calculators::Calculator,
+         'Required CALCULATOR to use (currently, only `term_deposit` is available)') do |calc|
+        @caclulator = calc
+        @caclulator.class.inputs.each do |input, details|
+          long_option = "--#{input} #{details[:long_opt]}"
+          on(details[:short_opt], long_option, details[:option_type], details[:description]) do |option|
+            # this enforces any requirements the calculator imposes on the given option (i.e. non-negative balances!)
+            details[:requires].call(option)
+            @inputs[input] = option
+          end
+        end
       end
     end
 
-    def accept_inputs
-      # request required inputs from the selected calculator
-      raise NotImplementedError
-    end
-
-    def snake_to_camel(str)
-      # Helper to instantiate the calculator
+    def self.snake_to_class_case(str)
+      # Helper to instantiate the calculator - CLI accepts snake_case inputs but classes are defined in ClassCase
       str.split('_').map(&:capitalize).join
     end
   end
