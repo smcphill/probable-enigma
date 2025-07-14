@@ -137,3 +137,5 @@ A place to find notes / decisions I've made during implementation.
     - it is nice however to have the input definitions defined by the calculator that uses them...
 - Due to time constraints, the calculator inputs are provided in a hash using the same keys as the calculator defines. This could be codified more strongly with a specific 'input' type
 - Due to time constraints and my unfamiliarity with Ruby OptionParser, I've brute-forced required argument enforcement
+- Due to ongoing issues with rspec and my cli runner, I'm deciding to not provbider unit test coverage for Ferociacalc::CLI
+    - integration tests should proide reasonable end to end coverage 
