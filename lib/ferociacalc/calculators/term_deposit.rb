@@ -51,8 +51,26 @@ module Ferociacalc
         }
       end
 
-      def call
+      def call(inputs)
         # perform the term deposit calculation and return a Ferociacalc::Result
+        # Formula for compounding deposits: A = P (1 + r)^(n)
+        # where
+        # A = ending balance
+        # P = starting balance (or principal)
+        # r = interest rate per period as a decimal (for example, 2% becomes 0.02)
+        # n = the number of time periods
+        # (source: https://moneysmart.gov.au/saving/compound-interest)
+        #
+        # note our interest rate is per annum, and our stated deposit period is monthly
+        # and the compounding period can be any of Ferociacalc::PaymentPeriod.class.VALID_PERIODS,
+        # so don't forget to take this into consideration
+        #
+        # note also our percentage is not expected as a decimal (e.g. 2% is 2.0, not 0.02)
+        #
+        # furthermore, we need to compound a _term_ deposit: A = P (1 + r/n)^(nt)
+        # which introduces the term (t) element
+        # (source: https://www.ujjivansfb.in/banking-blogs/deposits/how-compound-interest-in-fixed-deposits-work)
+        puts inputs
         Result.new(0, 0)
       end
     end

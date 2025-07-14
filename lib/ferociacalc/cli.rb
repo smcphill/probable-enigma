@@ -18,7 +18,7 @@ module Ferociacalc
 
     def run
       # Perform the calculation and present the result
-      result = @calculator.call
+      result = @calculator.call(@inputs)
       present_result(result)
       exit
     end
@@ -57,8 +57,8 @@ module Ferociacalc
       # Given calculators know their specific inputs, source CLI options from them instead of codifying here
       on('-c CALCULATOR', '--calculator CALCULATOR', Ferociacalc::Calculators::Calculator,
          'Required CALCULATOR to use (currently, only `term_deposit` is available)') do |calc|
-        @caclulator = calc
-        @caclulator.class.inputs.each do |input, details|
+        @calculator = calc
+        @calculator.class.inputs.each do |input, details|
           long_option = "--#{input} #{details[:long_opt]}"
           on(details[:short_opt], long_option, details[:option_type], details[:description]) do |option|
             # this enforces any requirements the calculator imposes on the given option (i.e. non-negative balances!)
