@@ -35,7 +35,12 @@ module Ferociacalc
 
     def present_result(result)
       # CLI Presentation
-      raise NotImplementedError
+      output = <<~HEREDOC
+        Final balance: $#{result.total}
+        Total interest earned:  $#{result.interest_accrued}
+      HEREDOC
+
+      puts output
     end
 
     def accept_calculator
