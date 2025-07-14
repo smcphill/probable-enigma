@@ -2,6 +2,32 @@
 require 'ferociacalc/calculators/term_deposit'
 
 describe Ferociacalc::Calculators::TermDeposit do
+  describe '#call' do
+    let(:initial_deposit) { 10.0 }
+    let(:interest_rate) { 3.5 }
+    let(:deposit_term) { 12 }
+    let(:interest_period) { 'monthly' }
+    let(:result) do
+      inputs = {
+        initial_deposit: initial_deposit,
+        interest_rate: interest_rate,
+        deposit_term: deposit_term,
+        interest_period: interest_period
+      }
+      described_class.new.call(inputs)
+    end
+
+    it 'returns a Result' do
+      returned_result = class_double(Ferociacalc::Result).as_stubbed_const
+      allow(Ferociacalc::Result).to receive(:new).with(0, 0).and_return(returned_result)
+
+      result
+
+      # TODO: update once #call has been implemented
+      expect(returned_result).to have_received(:new).with(0, 0)
+    end
+  end
+
   describe '.inputs' do
     it 'has the 4 input args required for the calculation' do
       expect(described_class.inputs.size).to eq(4)
