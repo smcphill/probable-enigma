@@ -17,15 +17,46 @@ describe Ferociacalc::Calculators::TermDeposit do
       described_class.new.call(inputs)
     end
 
-    it 'returns a Result' do
-      returned_result = class_double(Ferociacalc::Result).as_stubbed_const
-      allow(Ferociacalc::Result).to receive(:new).with(0, 0).and_return(returned_result)
+    context 'with a monthly interest period' do
+      it 'returns the expected Result' do
+        returned_result = class_double(Ferociacalc::Result).as_stubbed_const
+        allow(Ferociacalc::Result).to receive(:new).with(0, 0).and_return(returned_result)
 
-      result
+        result
 
-      # TODO: update once #call has been implemented
-      # expect(returned_result).to have_received(:new).with(1036, 36)
-      expect(returned_result).to have_received(:new).with(0, 0)
+        # TODO: update once #call has been implemented
+        # expect(returned_result).to have_received(:new).with(1036, 36)
+        expect(returned_result).to have_received(:new).with(0, 0)
+      end
+
+      it 'does not raise' do
+        expect { result }.not_to raise_error
+      end
+    end
+
+    context 'with a quarterly interest period' do
+      let(:interest_period) { 'quarterly' }
+
+      it 'raises' do
+        expect { result }.to raise_error(NotImplementedError, 'This submission only supports interest being paid monthly at the moment')
+      end
+    end
+
+
+    context 'with an annual interest period' do
+      let(:interest_period) { 'annually' }
+
+      it 'raises' do
+        expect { result }.to raise_error(NotImplementedError, 'This submission only supports interest being paid monthly at the moment')
+      end
+    end
+
+    context 'with a maturity interest period' do
+      let(:interest_period) { 'maturity' }
+
+      it 'raises' do
+        expect { result }.to raise_error(NotImplementedError, 'This submission only supports interest being paid monthly at the moment')
+      end
     end
   end
 

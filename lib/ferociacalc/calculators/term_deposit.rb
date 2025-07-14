@@ -70,6 +70,9 @@ module Ferociacalc
         # furthermore, we need to compound a _term_ deposit: A = P (1 + r/n)^(nt)
         # which introduces the term (t) element
         # (source: https://www.ujjivansfb.in/banking-blogs/deposits/how-compound-interest-in-fixed-deposits-work)
+        if inputs[:interest_period] != 'monthly'
+          raise NotImplementedError, 'This submission only supports interest being paid monthly at the moment'
+        end
         puts inputs
         calculation = 0
         inputs[:initial_deposit] = 0
