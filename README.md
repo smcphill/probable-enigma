@@ -130,3 +130,6 @@ A place to find notes / decisions I've made during implementation.
 
 - Due to time constraints, I've conflated CLI presentation and input parsing concerns within the CLI class
     - I started cli.rb based off inheriting OptionParser, but now wish CLI had an OptionParser instance variable as the conflated conern is a bit confusing with inheritance
+- Due to time constraints, I've inlined calculator input definitions in TermDeposit, although they belong in Calculator and could be DRYed up
+    - it is nice however to have the input definitions defined by the calculator that uses them...
+- Due to time constraints, the calculator inputs are provided in a hash using the same keys as the calculator defines. This could be codified more strongly with a specific 'input' type
