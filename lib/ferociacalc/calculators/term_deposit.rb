@@ -72,7 +72,11 @@ module Ferociacalc
         # which introduces the term (t) element
         # (source: https://www.ujjivansfb.in/banking-blogs/deposits/how-compound-interest-in-fixed-deposits-work)
         puts inputs
-        Result.new(0, 0)
+        calculation = 0
+        inputs[:initial_deposit] = 0
+        # interest accrued will be the final calculation, less initial deposit
+        # note this will need updating should we need to model fees or other transactions
+        Result.new(calculation, calculation - inputs[:initial_deposit])
       end
     end
   end
