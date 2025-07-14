@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'optparse'
+require 'ferociacalc/calculators'
 
 module Ferociacalc
   # CLI interface
@@ -17,7 +18,9 @@ module Ferociacalc
 
     def run
       # Perform the calculation and present the result
-      raise NotImplementedError
+      result = @calculator.call
+      present_result(result)
+      exit
     end
 
     private_methods
@@ -37,12 +40,27 @@ module Ferociacalc
 
     def accept_calculator
       # Acquire the desired calculator
-      raise NotImplementedError
+
+      accept(Ferociacalc::Calculators::Calculator) do |calc_name|
+        clazz = Object.const_get "Ferociacalc::Calculators::#{snake_to_camel(calc_name)}"
+        clazz.new
+      rescue NameError
+        raise "Unknown calculator '#{calc_name}'"
+      end
+
+      on('-c CALCULATOR', Ferociacalc::Calculators::Calculator, 'CALCULATOR to use') do |calc|
+        @calculator = calc
+      end
     end
 
     def accept_inputs
       # request required inputs from the selected calculator
       raise NotImplementedError
+    end
+
+    def snake_to_camel(str)
+      # Helper to instantiate the calculator
+      str.split('_').map(&:capitalize).join
     end
   end
 end
