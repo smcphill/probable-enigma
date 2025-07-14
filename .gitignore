@@ -1,0 +1,12 @@
+# bundler
+.bundle
+Gemfile.lock
+
+# byebug
+.byebug_history
+
+# osx
+.DS_Store
+
+# vscode
+.vscode
