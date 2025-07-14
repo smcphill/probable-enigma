@@ -3,6 +3,8 @@
 module Ferociacalc
   module Calculators
     # Defines the interface for all calculators
+    # note this could be a Module to be included, but can be used for type
+    # coercion via optparse as a Class
     class Calculator
       def self.inputs
         # defines the inputs the calculator requires

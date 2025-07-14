@@ -125,7 +125,7 @@ I've derived the following application concerns:
     - the presenter **wants** a calculation result
     - the presenter **knows** how to present that result
 
-I've selected a CLI implementation, so will implement a CLI Parser, and CLI Presenter.
+I've selected a CLI implementation, so will implement a CLI Parser, and CLI Presenter. I've selected Ruby [optparse](https://github.com/ruby/optparse) as it's part of the standard library, and the type coersion capabilities seem a great way to marshal user input.
 
 ### Developer notes
 
