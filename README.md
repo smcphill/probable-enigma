@@ -47,4 +47,86 @@ Final balance (e.g. $10,330 on the above inputs, interest paid at maturity)
 - Code fluency - how proficient are you at the technologies you’ve chosen?
 - Good habits - do you create small, frequent commits with descriptive messages?
 
+## The submission
 
+I've chosen Ruby for this exercise: it's been a while since I've written Ruby regularly, but I have more experience overall than more recent languages (Python, Golang, Java), and feel sufficiently comfortable in doing so.
+
+I've selected [asdf](https://github.com/asdf-vm/asdf) for Ruby version management - it's similar to [rbenv](https://github.com/rbenv/rbenv) but caters for other languages as well. I've developed against MRI Ruby 3.3.8.
+
+### Installation
+
+```bash
+git clone <the-project>
+cd <the-project>
+bundle install
+```
+
+### Usage
+
+```bash
+./bin/ferociacalc -h
+```
+
+```bash
+./bin/ferociacalc \
+  -c term_deposit \
+  -d <initial_deposit:float{positive}> \
+  -i <interest_rate_per_annum:float{positive}> \
+  -t <investment_term_months:int{positive}> \
+  -p <interest_paid:enum{[monthly, quarterly, annually, at_maturity]}>
+
+...
+
+Final balance: $XXX.XX
+Total interest earned: $XXX.XX
+```
+
+#### Running tests
+
+```bash
+bundle exec rspec -f d
+```
+
+### Structure
+
+- `bin/ferociacalc`: CLI runner
+- `lib/ferociacalc`: business objects
+- `lib/ferociacalc/calculators/calculator.rb`: abstract calculator
+- `lib/ferociacalc/calculators/term_deposit.rb`: term deposit calculator
+- `lib/ferociacalc/cli.rb`: CLI Parser and Presenter
+- `lib/ferociacalc/result.rb`: calculator results
+- `spec/term_deposit_integration_spec.rb`: integration test suite
+- `spec/lib/ferociacalc`: unit tests
+
+### Design
+
+Given the context (a company that creates banking software), I've assumed there are more calculators than the one requested, and that calculators in general:
+
+- expect specific inputs
+- apply specific calculation logic
+- provide calculation results
+
+I've derived the following application concerns:
+
+- Input parsing (as it's better to [parse, not validate](https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/))
+    - parsing _losslessly_ marshals inputs into application domain concepts
+    - the parser **needs** to know what inputs to expect
+        - expected input is determined by the calculator being invoked
+        - there are some inputs (and input characteristics) general to all calculations: non-negative balances, interest rates, terms; interest payment options
+- Calculation execution
+    - the calculator **wants** specific input
+    - the calculator **knows** what logic to apply on that input
+    - all calculators **return** a calculation result
+        - the result should include both the total outcome and the interest accrued component
+- Result presentation
+    - the presenter **wants** a calculation result
+    - the presenter **knows** how to present that result
+
+I've selected a CLI implementation, so will implement a CLI Parser, and CLI Presenter.
+
+### Developer notes
+
+A place to find notes / decisions I've made during implementation.
+
+- Due to time constraints, I've conflated CLI presentation and input parsing concerns within the CLI class
+    - I started cli.rb based off inheriting OptionParser, but now wish CLI had an OptionParser instance variable as the conflated conern is a bit confusing with inheritance

@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# A more general CLI entrypoint, included for completeness
+
+# modify load path to include project lib
+current_dir = File.dirname(__FILE__)
+libdir = "#{current_dir}/../lib"
+$LOAD_PATH.unshift(libdir) unless $LOAD_PATH.include?(libdir)
+
+require 'ferociacalc/cli'
+
+Ferociacalc::CLI.new(ARGV).run
