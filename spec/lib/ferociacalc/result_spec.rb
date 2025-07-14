@@ -3,19 +3,19 @@
 require_relative '../../../lib/ferociacalc/result'
 
 describe Ferociacalc::Result do
-  let(:calculation) { 1000.0 }
-  let(:interest) { 3.5 }
+  let(:calculation) { 1000.123456 }
+  let(:interest) { 5.012357 }
   let(:result) { described_class.new(calculation, interest) }
 
   describe '#total' do
-    it 'sets the total as a float of appropriate precision' do
-      expect(result.total).to eq(1000.0)
+    it 'sets the total as a float' do
+      expect(result.total).to eq(calculation)
     end
   end
 
   describe '#interest_accrued' do
-    it 'sets the interest_accrued as a float of appropriate precision' do
-      expect(result.interest_accrued).to eq(3.5)
+    it 'sets the interest_accrued as a float' do
+      expect(result.interest_accrued).to eq(interest)
     end
   end
 end

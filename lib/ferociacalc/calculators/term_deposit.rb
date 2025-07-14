@@ -53,29 +53,26 @@ module Ferociacalc
 
       def call(inputs)
         # perform the term deposit calculation and return a Ferociacalc::Result
-        # Formula for compounding deposits: A = P (1 + r)^(n)
+        #
+        # we need to compound a _fixed term_ deposit: A = P (1 + r/n)^(nt)
         # where
-        # A = ending balance
-        # P = starting balance (or principal)
+        # A = calculation
+        # P = starting deposit (or principal)
         # r = interest rate per period as a decimal (for example, 2% becomes 0.02)
-        # n = the number of time periods
-        # (source: https://moneysmart.gov.au/saving/compound-interest)
-        #
-        # note our interest rate is per annum, and our stated deposit period is monthly
-        # and the compounding period can be any of Ferociacalc::PaymentPeriod.class.VALID_PERIODS,
-        # so don't forget to take this into consideration
-        #
-        # note also our percentage is not expected as a decimal (e.g. 2% is 2.0, not 0.02)
-        #
-        # furthermore, we need to compound a _term_ deposit: A = P (1 + r/n)^(nt)
-        # which introduces the term (t) element
+        # n = the compounding frequency
+        # t = the deposit term
         # (source: https://www.ujjivansfb.in/banking-blogs/deposits/how-compound-interest-in-fixed-deposits-work)
+        #
+        # note our percentage is not expected as a decimal (e.g. 2% is 2.0, not 0.02)
         if inputs[:interest_period] != 'monthly'
           raise NotImplementedError, 'This submission only supports interest being paid monthly at the moment'
         end
-        puts inputs
-        calculation = 0
-        inputs[:initial_deposit] = 0
+
+        principal = inputs[:initial_deposit]
+        rate = (inputs[:interest_rate] / 100).to_f
+        compounding_frequency = inputs[:deposit_term]
+        term_years = (inputs[:deposit_term] / 12).to_f
+        calculation = principal * ((1 + (rate / compounding_frequency))**(compounding_frequency * term_years))
         # interest accrued will be the final calculation, less initial deposit
         # note this will need updating should we need to model fees or other transactions
         Result.new(calculation, calculation - inputs[:initial_deposit])

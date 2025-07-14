@@ -20,13 +20,11 @@ describe Ferociacalc::Calculators::TermDeposit do
     context 'with a monthly interest period' do
       it 'returns the expected Result' do
         returned_result = class_double(Ferociacalc::Result).as_stubbed_const
-        allow(Ferociacalc::Result).to receive(:new).with(0, 0).and_return(returned_result)
+        allow(Ferociacalc::Result).to receive(:new).with(1035.5669529459706, 35.56695294597057).and_return(returned_result)
 
         result
 
-        # TODO: update once #call has been implemented
-        # expect(returned_result).to have_received(:new).with(1036, 36)
-        expect(returned_result).to have_received(:new).with(0, 0)
+        expect(returned_result).to have_received(:new).with(1035.5669529459706, 35.56695294597057)
       end
 
       it 'does not raise' do

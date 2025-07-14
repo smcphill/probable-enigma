@@ -45,10 +45,10 @@ module Ferociacalc
     end
 
     def present_result(result)
-      # CLI Presentation
+      # CLI Presentation: responsible for formatting results
       output = <<~HEREDOC
-        Final balance: $#{result.total}
-        Total interest earned:  $#{result.interest_accrued}
+        Final balance: $#{'%.2f' % result.total.round(0)}
+        Total interest earned:  $#{'%.2f' % result.interest_accrued.round(0)}
       HEREDOC
 
       puts output
