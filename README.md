@@ -63,22 +63,25 @@ bundle install
 
 ### Usage
 
+Toplevel help is minimal. More detail is provided by calculator-specific help
+
 ```bash
 ./bin/ferociacalc -h
+./bin/ferociacalc -c term_deposit -h
 ```
+
+Anticipated output:
 
 ```bash
 ./bin/ferociacalc \
   -c term_deposit \
-  -d <initial_deposit:float{positive}> \
-  -i <interest_rate_per_annum:float{positive}> \
-  -t <investment_term_months:int{positive}> \
-  -p <interest_paid:enum{[monthly, quarterly, annually, at_maturity]}>
+  -d 10000 \
+  -i 1.1 \
+  -t 36 \
+  -p monthly
 
-...
-
-Final balance: $XXX.XX
-Total interest earned: $XXX.XX
+Final balance: $10,335
+Total interest earned: $335.00
 ```
 
 #### Running tests
@@ -133,3 +136,4 @@ A place to find notes / decisions I've made during implementation.
 - Due to time constraints, I've inlined calculator input definitions in TermDeposit, although they belong in Calculator and could be DRYed up
     - it is nice however to have the input definitions defined by the calculator that uses them...
 - Due to time constraints, the calculator inputs are provided in a hash using the same keys as the calculator defines. This could be codified more strongly with a specific 'input' type
+- Due to time constraints and my unfamiliarity with Ruby OptionParser, I've brute-forced required argument enforcement

@@ -7,9 +7,16 @@ module Ferociacalc
   # CLI interface
   class CLI < OptionParser
     def initialize(argv = [])
+      @inputs = {}
       @argv = argv.dup
-      super('Usage: ferociacalc [options]')
-      parse_inputs
+      # print help if no args given, or only the calculator has been provided
+      @argv << '-h' if @argv.empty? || @argv.size < 3
+
+      super('Usage: ferociacalc -c term_deposit [options; -h for help]')
+      # CLI input parsing
+      accept_calculator
+      calculator_options
+      parse_options
     rescue StandardError => e
       # Don't emit stack traces, just return OptionParser guidance and exit -1
       puts e
@@ -25,12 +32,18 @@ module Ferociacalc
 
     private_methods
 
-    def parse_inputs
-      # CLI input parsing
-      accept_calculator
-      accept_inputs
+    def parse_options
+      # I don't know why, but OptionParser isn't honouring my required options.
+      # In order to move quickly, and given all args are required, I'm implementing that check
+      # here. Perhaps the calculator shouldn't assume the option parser has parsed things.... grrr
+      parse!(@argv, into: @inputs)
+      required_options = @calculator.class.inputs.keys
+      missing_options = required_options - @inputs.keys
+      return if missing_options.empty?
 
-      parse!(@argv)
+      # otherwise, print help and raise
+      puts self
+      raise "Missing required options: #{missing_options.map(&:to_s).join(', ')}"
     end
 
     def present_result(result)
