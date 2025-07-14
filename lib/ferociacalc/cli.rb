@@ -18,16 +18,14 @@ module Ferociacalc
       calculator_options
       parse_options
     rescue StandardError => e
-      # Don't emit stack traces, just return OptionParser guidance and exit -1
+      # Don't emit stack traces, just return OptionParser guidance
       puts e
-      exit(-1)
     end
 
     def run
       # Perform the calculation and present the result
       result = @calculator.call(@inputs)
       present_result(result)
-      exit
     end
 
     private_methods
