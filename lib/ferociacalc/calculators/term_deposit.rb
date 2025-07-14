@@ -8,7 +8,8 @@ module Ferociacalc
   module Calculators
     # Term deposit calculator
     class TermDeposit < Calculator
-      def self.inputs # rubocop:disable Metrics/MethodLength
+      def self.inputs # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+        interest_periods = Ferociacalc::PaymentPeriod.interest_periods
         # defines the inputs this calculator requires. the toplevel keys here are used by `#call`
         # TODO should requires impose range conditions? (i.e. maximal rate, minimal deposit)
         {
@@ -40,10 +41,10 @@ module Ferociacalc
             end
           },
           interest_period: {
-            short_opt: '-p PERIOD < monthly | quarterly | annually | at_maturity >',
-            long_opt: 'PERIOD < monthly | quarterly | annually | at_maturity >',
+            short_opt: "-p PERIOD < #{interest_periods.join(' | ')} >",
+            long_opt: "PERIOD < #{interest_periods.join(' | ')} >",
             option_type: String,
-            description: 'Required Interest payment period (e.g. monthly)',
+            description: "Required Interest payment period (e.g. #{interest_periods[0]})",
             requires: lambda do |val|
               raise "must provide a valid interest period (was #{val})" unless Ferociacalc::PaymentPeriod.valid?(val)
             end
