@@ -3,7 +3,7 @@ require 'ferociacalc/calculators/term_deposit'
 
 describe Ferociacalc::Calculators::TermDeposit do
   describe '#call' do
-    let(:initial_deposit) { 10.0 }
+    let(:initial_deposit) { 1000.0 }
     let(:interest_rate) { 3.5 }
     let(:deposit_term) { 12 }
     let(:interest_period) { 'monthly' }
@@ -24,6 +24,7 @@ describe Ferociacalc::Calculators::TermDeposit do
       result
 
       # TODO: update once #call has been implemented
+      # expect(returned_result).to have_received(:new).with(1036, 36)
       expect(returned_result).to have_received(:new).with(0, 0)
     end
   end
@@ -49,13 +50,17 @@ describe Ferociacalc::Calculators::TermDeposit do
         expect(input[:option_type]).to eq(Float)
       end
 
-      it 'requires positive values' do
-        expect { input[:requires].call(2) }.to_not raise_error
+      it 'requires positive values gte 1000' do
+        expect { input[:requires].call(1000) }.to_not raise_error
 
       end
 
+      it 'raises on positive values lt 1000' do
+        expect { input[:requires].call(10) }.to raise_error(/must provide a valid initial deposit amount/)
+      end
+
       it 'raises on negative values' do
-        expect { input[:requires].call(-2) }.to raise_error(/must provide a positive initial deposit amount/)
+        expect { input[:requires].call(-2) }.to raise_error(/must provide a valid initial deposit amount/)
       end
     end
 
@@ -76,7 +81,7 @@ describe Ferociacalc::Calculators::TermDeposit do
       end
 
       it 'raises on negative values' do
-        expect { input[:requires].call(-2) }.to raise_error(/must provide a positive interest rate number/)
+        expect { input[:requires].call(-2) }.to raise_error(/must provide a valid interest rate number/)
       end
     end
 
@@ -97,7 +102,7 @@ describe Ferociacalc::Calculators::TermDeposit do
       end
 
       it 'raises on negative values' do
-        expect { input[:requires].call(-2) }.to raise_error(/must provide a positive number of months/)
+        expect { input[:requires].call(-2) }.to raise_error(/must provide a valid number of months/)
       end
     end
 

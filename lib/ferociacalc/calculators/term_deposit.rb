@@ -8,36 +8,35 @@ module Ferociacalc
   module Calculators
     # Term deposit calculator
     class TermDeposit < Calculator
-      def self.inputs # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+      def self.inputs # rubocop:disable Metrics/MethodLength
         interest_periods = Ferociacalc::PaymentPeriod.interest_periods
         # defines the inputs this calculator requires. the toplevel keys here are used by `#call`
-        # TODO should requires impose range conditions? (i.e. maximal rate, minimal deposit)
         {
           initial_deposit: {
             short_opt: '-d DOLLARS',
             long_opt: 'DOLLARS',
             option_type: Float,
-            description: 'Required Initial deposit amount in dollars (e.g. 1000)',
+            description: 'Required Initial deposit amount in dollars (minimum 1000.00)',
             requires: lambda do |val|
-              raise "must provide a positive initial deposit amount (was #{val})" unless val.positive?
+              raise "must provide a valid initial deposit amount (was #{val})" unless val.positive? && val >= 1_000
             end
           },
           interest_rate: {
             short_opt: '-i PERCENT',
             long_opt: 'PERCENT',
             option_type: Float,
-            description: 'Required Interest rate % p.a. (e.g. 3% is 3.0, not 0.03)',
+            description: 'Required Interest rate % p.a (0-15; e.g. 3% is 3, not 0.03)',
             requires: lambda do |val|
-              raise "must provide a positive interest rate number (was #{val})" unless val.positive?
+              raise "must provide a valid interest rate number (was #{val})" unless (val >= 0) && (val <= 15)
             end
           },
           deposit_term: {
             short_opt: '-t MONTHS',
             long_opt: 'MONTHS',
             option_type: Integer,
-            description: 'Required Deposit term in months (e.g. 12)',
+            description: 'Required Deposit term in months (0-60; e.g. 12)',
             requires: lambda do |val|
-              raise "must provide a positive number of months (was #{val})" unless val.positive?
+              raise "must provide a valid number of months (was #{val})" unless (val.positive?) && (val <= 60)
             end
           },
           interest_period: {
